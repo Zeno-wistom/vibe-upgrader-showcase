@@ -207,19 +207,20 @@ function Heading({ eyebrow, title, body, light = false }: { eyebrow: string; tit
   return <div className={`heading${light ? ' light' : ''}`}><p>{eyebrow}</p><h2>{title.map(line => <span key={line}>{line}</span>)}</h2><p>{body}</p></div>
 }
 
-function BeforeWorkspace() {
+function BeforeWorkspace({ locale }: { locale: Locale }) {
+  const zh = locale === 'zh'
   return <div className="workspace before-workspace" aria-hidden="true">
     <aside><Mark /><span className="active" /><span /><span /><span /><span /></aside>
     <main>
-      <header><div><small>PROJECT MANAGEMENT</small><strong>Northstar Dashboard</strong></div><button tabIndex={-1}>+ Create</button></header>
-      <div className="old-filters"><span>Overview</span><span>Tasks</span><span>Reports</span><span>Team</span><button tabIndex={-1}>Filter</button></div>
-      <div className="old-stats">{['74%', '12', '08', '03'].map((v, i) => <div key={v}><small>{['Completion', 'Open tasks', 'Members', 'Blocked'][i]}</small><strong>{v}</strong><i /></div>)}</div>
+      <header><div><small>{zh ? '项目管理' : 'PROJECT MANAGEMENT'}</small><strong>{zh ? '北极星项目总览' : 'Northstar Dashboard'}</strong></div><button tabIndex={-1}>{zh ? '+ 新建' : '+ Create'}</button></header>
+      <div className="old-filters"><span>{zh ? '总览' : 'Overview'}</span><span>{zh ? '任务' : 'Tasks'}</span><span>{zh ? '报告' : 'Reports'}</span><span>{zh ? '团队' : 'Team'}</span><button tabIndex={-1}>{zh ? '筛选' : 'Filter'}</button></div>
+      <div className="old-stats">{['74%', '12', '08', '03'].map((v, i) => <div key={v}><small>{(zh ? ['完成度', '待办任务', '团队成员', '受阻任务'] : ['Completion', 'Open tasks', 'Members', 'Blocked'])[i]}</small><strong>{v}</strong><i /></div>)}</div>
       <div className="old-table">
-        <div><b>Task</b><b>Owner</b><b>Status</b></div>
-        <div><span>Research system</span><span>JR</span><em>Done</em></div>
-        <div><span>Interface direction</span><span>MS</span><em>Working</em></div>
-        <div><span>Motion language</span><span>AL</span><em>Todo</em></div>
-        <div><span>Design review</span><span>YOU</span><em>Today</em></div>
+        <div><b>{zh ? '任务' : 'Task'}</b><b>{zh ? '负责人' : 'Owner'}</b><b>{zh ? '状态' : 'Status'}</b></div>
+        <div><span>{zh ? '研究系统' : 'Research system'}</span><span>JR</span><em>{zh ? '完成' : 'Done'}</em></div>
+        <div><span>{zh ? '界面方向' : 'Interface direction'}</span><span>MS</span><em>{zh ? '进行中' : 'Working'}</em></div>
+        <div><span>{zh ? '动效语言' : 'Motion language'}</span><span>AL</span><em>{zh ? '待处理' : 'Todo'}</em></div>
+        <div><span>{zh ? '设计评审' : 'Design review'}</span><span>{zh ? '你' : 'YOU'}</span><em>{zh ? '今天' : 'Today'}</em></div>
       </div>
     </main>
   </div>
@@ -227,19 +228,20 @@ function BeforeWorkspace() {
 
 function AfterWorkspace({ locale, completed, interactive, onComplete }: { locale: Locale; completed: boolean; interactive: boolean; onComplete: () => void }) {
   const c = text[locale].compare
+  const zh = locale === 'zh'
   return <div className={`workspace after-workspace${completed ? ' completed' : ''}`}>
     <aside><Mark /><button tabIndex={-1} aria-hidden="true">⌂</button><button tabIndex={-1} aria-hidden="true">◇</button><button tabIndex={-1} aria-hidden="true">↗</button><span>NS</span></aside>
     <main>
-      <header><div><small>MONDAY / ACTIVE WORKSPACE</small><strong>Good morning.<br />Move Northstar forward.</strong></div><div className="team"><i>JR</i><i>MS</i><i>+3</i></div></header>
+      <header><div><small>{zh ? '星期一 / 当前工作区' : 'MONDAY / ACTIVE WORKSPACE'}</small><strong>{zh ? <>早上好。<br />推进北极星计划。</> : <>Good morning.<br />Move Northstar forward.</>}</strong></div><div className="team"><i>JR</i><i>MS</i><i>+3</i></div></header>
       <section className="focus-card">
-        <div><small>NEXT BEST ACTION</small><h3>{completed ? c.done : 'Design review'}</h3><p>{completed ? 'Everything is ready for the next milestone.' : '3 decisions are ready. Estimated time: 8 min.'}</p></div>
+        <div><small>{zh ? '下一项关键任务' : 'NEXT BEST ACTION'}</small><h3>{completed ? c.done : (zh ? '设计评审' : 'Design review')}</h3><p>{completed ? (zh ? '全部就绪，可以进入下一里程碑。' : 'Everything is ready for the next milestone.') : (zh ? '3 项决策已就绪，预计 8 分钟。' : '3 decisions are ready. Estimated time: 8 min.')}</p></div>
         <button type="button" tabIndex={interactive ? 0 : -1} onClick={onComplete}>{completed ? '✓' : c.action}<b>→</b></button>
         <div className="focus-progress"><span style={{ '--value': completed ? '100%' : '74%' } as CSSProperties} /><strong>{completed ? '100' : '74'}<small>%</small></strong></div>
       </section>
       <section className="after-grid">
-        <div className="momentum"><small>WEEKLY MOMENTUM</small><strong>+18%</strong><svg viewBox="0 0 240 70" preserveAspectRatio="none"><path d="M0 58 C30 55 34 48 60 50 S94 44 116 37 S150 46 173 25 S206 22 240 8" /></svg></div>
-        <div className="quick"><small>QUICK ACTIONS</small><button>Share preview <b>↗</b></button><button>Open decisions <b>3</b></button></div>
-        <div className="activity"><small>LIVE ACTIVITY</small><p><i />Mia resolved navigation</p><p><i />Motion spec ready</p></div>
+        <div className="momentum"><small>{zh ? '本周进展' : 'WEEKLY MOMENTUM'}</small><strong>+18%</strong><svg viewBox="0 0 240 70" preserveAspectRatio="none"><path d="M0 58 C30 55 34 48 60 50 S94 44 116 37 S150 46 173 25 S206 22 240 8" /></svg></div>
+        <div className="quick"><small>{zh ? '快捷操作' : 'QUICK ACTIONS'}</small><button>{zh ? '分享预览' : 'Share preview'} <b>↗</b></button><button>{zh ? '查看决策' : 'Open decisions'} <b>3</b></button></div>
+        <div className="activity"><small>{zh ? '实时动态' : 'LIVE ACTIVITY'}</small><p><i />{zh ? 'Mia 已解决导航问题' : 'Mia resolved navigation'}</p><p><i />{zh ? '动效规范已就绪' : 'Motion spec ready'}</p></div>
       </section>
       <div className="success-toast" role="status">{c.toast}<b>✓</b></div>
     </main>
@@ -264,7 +266,7 @@ function Compare({ locale }: { locale: Locale }) {
     <div className="compare-frame" style={{ '--split': `${position}%`, '--p': p } as CSSProperties} onPointerDown={updateFromPointer} onPointerMove={updateFromPointer}>
       <div className="compare-top"><span>{c.after}</span><span>{c.before}</span></div>
       <div className="compare-canvas">
-        <div className="before-layer"><BeforeWorkspace /></div>
+        <div className="before-layer"><BeforeWorkspace locale={locale} /></div>
         <div className="after-layer"><AfterWorkspace locale={locale} completed={completed} interactive={position > 60} onComplete={() => setCompleted(v => !v)} /></div>
       </div>
       <div className="compare-line" aria-hidden="true"><span><b>‹</b><i /><b>›</b></span><small>{position < 22 ? c.hint : `${position}%`}</small></div>
@@ -276,15 +278,16 @@ function Compare({ locale }: { locale: Locale }) {
 
 const capabilityIcons: Record<Capability, string> = { hierarchy: 'A', workflow: '↗', feedback: '✓', motion: '◎' }
 
-function CapabilityDemo({ active }: { active: Capability }) {
+function CapabilityDemo({ active, locale }: { active: Capability; locale: Locale }) {
+  const zh = locale === 'zh'
   return <div className={`cap-demo mode-${active}`}>
-    <div className="cap-top"><span>PROJECT / NORTHSTAR</span><i /><i /></div>
-    <div className="cap-title"><small>ACTIVE WORKSPACE</small><strong>Launch ready.</strong><button>Publish <b>↗</b></button></div>
+    <div className="cap-top"><span>{zh ? '项目 / 北极星' : 'PROJECT / NORTHSTAR'}</span><i /><i /></div>
+    <div className="cap-title"><small>{zh ? '当前工作区' : 'ACTIVE WORKSPACE'}</small><strong>{zh ? '发布已就绪。' : 'Launch ready.'}</strong><button>{zh ? '发布' : 'Publish'} <b>↗</b></button></div>
     <div className="cap-body">
-      <div className="cap-primary"><small>NEXT ACTION</small><h3>Approve final experience</h3><p>Everything needed for the decision is in one place.</p><button>Review now <b>→</b></button></div>
-      <div className="cap-side"><small>PROGRESS</small><strong>92%</strong><i><b /></i><p><span>✓</span>Structure</p><p><span>✓</span>Interaction</p><p><span>•</span>Final review</p></div>
+      <div className="cap-primary"><small>{zh ? '下一项任务' : 'NEXT ACTION'}</small><h3>{zh ? '批准最终体验' : 'Approve final experience'}</h3><p>{zh ? '做出决定所需的信息，都集中在这里。' : 'Everything needed for the decision is in one place.'}</p><button>{zh ? '现在评审' : 'Review now'} <b>→</b></button></div>
+      <div className="cap-side"><small>{zh ? '完成进度' : 'PROGRESS'}</small><strong>92%</strong><i><b /></i><p><span>✓</span>{zh ? '结构' : 'Structure'}</p><p><span>✓</span>{zh ? '交互' : 'Interaction'}</p><p><span>•</span>{zh ? '最终评审' : 'Final review'}</p></div>
     </div>
-    <div className="cap-feedback"><b>✓</b><span>Changes saved<br /><small>Ready for review</small></span></div>
+    <div className="cap-feedback"><b>✓</b><span>{zh ? '修改已保存' : 'Changes saved'}<br /><small>{zh ? '可以开始评审' : 'Ready for review'}</small></span></div>
     <div className="motion-rings"><i /><i /><i /></div>
   </div>
 }
@@ -300,14 +303,14 @@ function Capabilities({ locale }: { locale: Locale }) {
         const item = c.items[key]
         return <button key={key} role="tab" aria-selected={active === key} onClick={() => setActive(key)}><span>0{i + 1}</span><i>{capabilityIcons[key]}</i><div><strong>{item[0]}</strong><small>{item[1]}</small></div><b>→</b></button>
       })}</div>
-      <div className="cap-stage"><div className="stage-label"><span>LIVE DEMO</span><b>{c.items[active][0]}</b></div><CapabilityDemo active={active} /></div>
+      <div className="cap-stage"><div className="stage-label"><span>{locale === 'zh' ? '实时演示' : 'LIVE DEMO'}</span><b>{c.items[active][0]}</b></div><CapabilityDemo active={active} locale={locale} /></div>
     </div>
   </div></section>
 }
 
 function Scope({ locale }: { locale: Locale }) {
   const c = text[locale].scope
-  const [track, setTrack] = useState<Track>('standard')
+  const [track, setTrack] = useState<Track>('experimental')
   const selected = track === 'standard' ? c.standard : c.experimental
   return <section className="scope section-pad" id="scope">
     <Heading eyebrow={c.eyebrow} title={c.title} body={c.body} />
