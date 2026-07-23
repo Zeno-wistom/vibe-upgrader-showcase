@@ -346,5 +346,18 @@ function FinalCTA({ locale }: { locale: Locale }) {
 export default function App() {
   const [locale, setLocale] = useState<Locale>('zh')
   useEffect(() => { document.documentElement.lang = locale === 'zh' ? 'zh-CN' : 'en' }, [locale])
+  useEffect(() => {
+    const targetId = window.location.hash.slice(1)
+    if (!targetId) return
+    const frame = requestAnimationFrame(() => {
+      const target = document.getElementById(targetId)
+      if (!target) return
+      const previousBehavior = document.documentElement.style.scrollBehavior
+      document.documentElement.style.scrollBehavior = 'auto'
+      target.scrollIntoView()
+      document.documentElement.style.scrollBehavior = previousBehavior
+    })
+    return () => cancelAnimationFrame(frame)
+  }, [])
   return <><Header locale={locale} onLocale={() => setLocale(locale === 'zh' ? 'en' : 'zh')} /><main><Hero locale={locale} /><Compare locale={locale} /><Tracks locale={locale} /><DecisionFlow locale={locale} /><MechanismLab locale={locale} /><FinalCTA locale={locale} /></main></>
 }
