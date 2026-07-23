@@ -68,8 +68,8 @@ const copy = {
       index: '05 / 一句话总结',
       title: 'Vibe-Upgrader 不负责把网站变花。\n它负责把网站变得更像一个成品。',
       body: '找到值得借鉴的机制，拒绝不合适的效果，再把剩下的做成统一、可用、可维护的体验。',
-      github: 'GitHub 仓库 / 即将开放',
-      demo: '当前本地演示',
+      github: '查看 GitHub 仓库',
+      case: '查看 AIGC 真实案例',
       back: '回到顶部',
     },
   },
@@ -114,7 +114,7 @@ const copy = {
     final: {
       index: '05 / IN ONE SENTENCE', title: 'Vibe-Upgrader does not make websites louder.\nIt makes them feel finished.',
       body: 'Find a useful mechanism, reject what does not fit, and turn the rest into one usable, maintainable experience.',
-      github: 'GitHub repository / Coming soon', demo: 'Local demo', back: 'Back to top',
+      github: 'View on GitHub', case: 'View real-world AIGC case', back: 'Back to top',
     },
   },
 } as const
@@ -261,6 +261,7 @@ function Tracks({ locale }: { locale: Locale }) {
 
 function DecisionFlow({ locale }: { locale: Locale }) {
   const [active, setActive] = useState(0)
+  const [hasInteracted, setHasInteracted] = useState(false)
   const c = copy[locale].flow
   const steps = flow[locale]
   const current = steps[active]
@@ -269,15 +270,18 @@ function DecisionFlow({ locale }: { locale: Locale }) {
     const rect = event.currentTarget.getBoundingClientRect()
     const next = Math.round(Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width)) * 5)
     setActive(next)
-    if (event.type === 'pointerdown') event.currentTarget.setPointerCapture(event.pointerId)
+    if (event.type === 'pointerdown') {
+      setHasInteracted(true)
+      event.currentTarget.setPointerCapture(event.pointerId)
+    }
   }
   return <section className="flow-section section-shell" id="flow">
     <SectionHeading index={c.index} title={c.title} intro={c.intro} />
     <div className="decision-machine" style={{ '--decision': active } as CSSProperties}>
       <div className="decision-dragger" onPointerDown={updateFromPointer} onPointerMove={updateFromPointer}>
         <div className="decision-nodes" aria-hidden="true">{steps.map((step, index) => <div key={step[0]} className={active === index ? 'is-active' : ''}><span>{step[0]}</span><strong>{step[1]}</strong></div>)}</div>
-        <i className="decision-cursor"><b>↔</b></i>
-        <input type="range" min="0" max="5" step="1" value={active} onChange={event => setActive(Number(event.target.value))} aria-label={locale === 'zh' ? '拖动查看决策步骤' : 'Drag through decision steps'} />
+        <i className={`decision-cursor${hasInteracted ? ' is-used' : ''}`}><b>↔</b></i>
+        <input type="range" min="0" max="5" step="1" value={active} onChange={event => { setHasInteracted(true); setActive(Number(event.target.value)) }} aria-label={locale === 'zh' ? '拖动查看决策步骤' : 'Drag through decision steps'} />
       </div>
       <div className={`decision-readout decision-${active}`} role="tabpanel" aria-live="polite">
         <div className="decision-count"><span>{current[0]}</span><small>/ 06</small></div>
@@ -336,7 +340,7 @@ function MechanismLab({ locale }: { locale: Locale }) {
 
 function FinalCTA({ locale }: { locale: Locale }) {
   const c = copy[locale].final
-  return <section className="final-section" id="github"><div className="final-grid" /><p>{c.index}</p><h2>{c.title.split('\n').map(line => <span key={line}>{line}</span>)}</h2><div className="final-bottom"><p>{c.body}</p><div><a href="#top">{c.github}<b>↗</b></a><span>{c.demo}</span></div></div><footer><a href="#top">↑ {c.back}</a><BrandMark /><span>V1.0 / SHOWCASE</span></footer></section>
+  return <section className="final-section" id="github"><div className="final-grid" /><p>{c.index}</p><h2>{c.title.split('\n').map(line => <span key={line}>{line}</span>)}</h2><div className="final-bottom"><p>{c.body}</p><div className="final-actions"><a href="https://github.com/Zeno-wistom/vibe-upgrader" target="_blank" rel="noreferrer noopener">{c.github}<b>↗</b></a><a href="https://vibe-upgrader-aigc-case.vercel.app/" target="_blank" rel="noreferrer noopener">{c.case}<b>↗</b></a><a href="#top">{c.back}<b>↑</b></a></div></div><footer><span>VIBE-UPGRADER</span><BrandMark /><span>V1.0 / SHOWCASE</span></footer></section>
 }
 
 export default function App() {
