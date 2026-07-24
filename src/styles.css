@@ -7,11 +7,22 @@
   --red: #ff5b49;
   --violet: #ff5b49;
   --muted: #d9d8d1;
-  --line: rgba(13, 14, 12, .2);
+  --line: rgba(13, 14, 12, .16);
+  --line-soft: rgba(13, 14, 12, .1);
+  --line-dark: rgba(241, 240, 234, .16);
+  --surface-raised: #f8f7f1;
+  --surface-dark: #151613;
+  --shadow-panel: 0 34px 90px rgba(13, 14, 12, .16);
+  --shadow-workspace: 0 28px 72px rgba(13, 14, 12, .24);
   --ease: cubic-bezier(.22, 1, .36, 1);
-  --shape-structure: 0px;
-  --shape-control: 4px;
-  --shape-round: 999px;
+  --shape-none: 0px;
+  --shape-xs: 4px;
+  --shape-sm: 8px;
+  --shape-md: 12px;
+  --shape-lg: 16px;
+  --shape-xl: 24px;
+  --shape-2xl: 32px;
+  --shape-full: 999px;
   font-family: Inter, "Microsoft YaHei", "PingFang SC", sans-serif;
   color: var(--ink);
   background: var(--paper);
@@ -34,6 +45,11 @@ a { text-decoration: none; }
 button:focus-visible, a:focus-visible {
   outline: 3px solid var(--violet);
   outline-offset: 4px;
+}
+.capability-tabs button:focus-visible,
+.scope-switch button:focus-visible,
+.process-steps button:focus-visible {
+  outline-offset: -5px;
 }
 .compare-control:focus-visible { outline: none; }
 .compare-control:focus-visible .compare-handle {
@@ -115,7 +131,7 @@ button:focus-visible, a:focus-visible {
   align-items: center;
   gap: 9px;
   border: 1px solid;
-  border-radius: var(--shape-round);
+  border-radius: var(--shape-full);
   background: transparent;
   font: 11px "DM Mono";
 }
@@ -186,7 +202,7 @@ button:focus-visible, a:focus-visible {
   justify-content: space-between;
   gap: 34px;
   border: 1px solid var(--ink);
-  border-radius: var(--shape-control);
+  border-radius: var(--shape-md);
   font-size: 13px;
   font-weight: 650;
   transition: transform .2s var(--ease), box-shadow .2s var(--ease), background .2s;
@@ -204,7 +220,9 @@ button:focus-visible, a:focus-visible {
   display: grid;
   grid-template-columns: 1fr 1fr;
   border: 1px solid var(--ink);
-  border-radius: var(--shape-structure);
+  overflow: hidden;
+  border-color: rgba(13, 14, 12, .24);
+  border-radius: var(--shape-lg);
 }
 .hero-tracks div {
   min-height: 58px;
@@ -237,11 +255,11 @@ button:focus-visible, a:focus-visible {
   display: grid;
   grid-template-columns: 17% 1fr;
   overflow: hidden;
-  border: 1px solid var(--ink);
-  border-radius: var(--shape-structure);
+  border: 1px solid rgba(241, 240, 234, .16);
+  border-radius: var(--shape-2xl);
   background: #11120f;
   color: var(--paper);
-  box-shadow: 0 42px 100px rgba(13, 14, 12, .28);
+  box-shadow: var(--shadow-panel);
 }
 .rebuild-shell aside {
   padding: 28px 22px;
@@ -253,7 +271,7 @@ button:focus-visible, a:focus-visible {
 .rebuild-shell aside .mark { margin-bottom: 14px; }
 .rebuild-shell aside > i {
   height: 9px;
-  border-radius: var(--shape-round);
+  border-radius: var(--shape-full);
   background: #484a44;
 }
 .rebuild-shell aside > i.active { width: 100%; background: var(--acid); }
@@ -301,7 +319,7 @@ button:focus-visible, a:focus-visible {
   justify-content: space-between;
   gap: 20px;
   background: var(--acid);
-  border-radius: var(--shape-control);
+  border-radius: var(--shape-sm);
   color: var(--ink);
   font-size: 11px;
   font-weight: 650;
@@ -316,7 +334,7 @@ button:focus-visible, a:focus-visible {
   transform: translateX(-120%);
 }
 .hero.is-complete .completion-scan { animation: completion-scan .72s var(--ease) 1; }
-.hero.is-complete .rebuild-shell { box-shadow: 0 0 0 2px var(--acid), 0 42px 100px rgba(13, 14, 12, .28); }
+.hero.is-complete .rebuild-shell { box-shadow: 0 0 0 2px var(--acid), var(--shadow-panel); }
 @keyframes completion-scan {
   0% { opacity: 0; transform: translateX(-120%); }
   20% { opacity: 1; }
@@ -326,7 +344,7 @@ button:focus-visible, a:focus-visible {
   position: absolute;
   padding: 9px 12px;
   border: 1px solid var(--ink);
-  border-radius: var(--shape-control);
+  border-radius: var(--shape-sm);
   background: var(--paper);
   color: var(--ink);
   box-shadow: 4px 4px 0 var(--ink);
@@ -347,7 +365,9 @@ button:focus-visible, a:focus-visible {
   bottom: 66px;
   display: grid;
   grid-template-columns: .7fr repeat(3, 1fr);
+  overflow: hidden;
   border: 1px solid var(--line);
+  border-radius: var(--shape-xl);
   background: rgba(241, 240, 234, .78);
   backdrop-filter: blur(12px);
   opacity: clamp(0, calc(1 - var(--hero-p) * 1.8), 1);
@@ -420,10 +440,10 @@ button:focus-visible, a:focus-visible {
   aspect-ratio: 16 / 9;
   margin: 70px auto 0;
   overflow: hidden;
-  border: 1px solid var(--ink);
-  border-radius: var(--shape-structure);
+  border: 1px solid rgba(13, 14, 12, .2);
+  border-radius: var(--shape-2xl);
   background: #d1d1cb;
-  box-shadow: 0 30px 78px rgba(13, 14, 12, .12);
+  box-shadow: var(--shadow-panel);
 }
 .compare-top {
   position: absolute;
@@ -440,7 +460,7 @@ button:focus-visible, a:focus-visible {
   font-size: 12px;
   font-weight: 650;
 }
-.compare-top span:first-child { padding: 7px 10px; border-radius: var(--shape-control); background: var(--acid); }
+.compare-top span:first-child { padding: 7px 11px; border-radius: var(--shape-full); background: var(--acid); }
 .compare-canvas { position: absolute; inset: 56px 0 0; }
 .before-layer, .after-layer {
   position: absolute;
@@ -455,7 +475,7 @@ button:focus-visible, a:focus-visible {
   display: grid;
   grid-template-columns: 14% minmax(0, 1fr);
   overflow: hidden;
-  border-radius: var(--shape-structure);
+  border-radius: var(--shape-xl);
 }
 .workspace > aside { padding: 24px 20px; }
 .workspace > main { min-width: 0; }
@@ -478,7 +498,7 @@ button:focus-visible, a:focus-visible {
 .before-workspace header button, .old-filters button {
   padding: 9px 14px;
   border: 1px solid #8f908b;
-  border-radius: var(--shape-control);
+  border-radius: var(--shape-sm);
   background: transparent;
   font-size: 12px;
 }
@@ -510,10 +530,10 @@ button:focus-visible, a:focus-visible {
 .old-table em { font-style: normal; }
 
 .after-workspace {
-  border: 1px solid var(--ink);
+  border: 1px solid var(--line-dark);
   background: #11120f;
   color: var(--paper);
-  box-shadow: 0 28px 76px rgba(13, 14, 12, .28);
+  box-shadow: var(--shadow-workspace);
 }
 .after-workspace > aside {
   display: flex;
@@ -529,7 +549,7 @@ button:focus-visible, a:focus-visible {
   height: 38px;
   display: grid;
   place-content: center;
-  border-radius: var(--shape-round);
+  border-radius: var(--shape-full);
   color: #92958b;
   font-size: 14px;
 }
@@ -541,7 +561,7 @@ button:focus-visible, a:focus-visible {
   display: grid;
   place-content: center;
   border: 1px solid #5c5e57;
-  border-radius: var(--shape-round);
+  border-radius: var(--shape-full);
   font: 11px "DM Mono";
 }
 .after-workspace > main { position: relative; padding: clamp(20px, 2.8vw, 40px); }
@@ -556,32 +576,123 @@ button:focus-visible, a:focus-visible {
   display: grid;
   place-content: center;
   border: 2px solid #11120f;
-  border-radius: var(--shape-round);
+  border-radius: var(--shape-full);
   background: #33352f;
   font: normal 10px "DM Mono";
 }
 .team i:last-child { background: var(--acid); color: var(--ink); }
 .focus-card {
   position: relative;
-  min-height: 41%;
+  min-height: 252px;
   margin-top: clamp(15px, 2vw, 26px);
-  padding: clamp(18px, 2.2vw, 32px);
+  padding: clamp(18px, 2vw, 28px);
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(175px, .78fr) minmax(300px, 1.28fr) minmax(176px, .72fr);
+  gap: clamp(16px, 1.8vw, 28px);
+  align-items: stretch;
   overflow: hidden;
-  border-radius: var(--shape-structure);
+  border-radius: var(--shape-lg);
   background: var(--acid);
   color: var(--ink);
   transform: translateX(calc((1 - var(--p)) * 25px));
 }
+.focus-copy { align-self: center; }
 .focus-card small { font-size: 11px; font-weight: 650; }
 .focus-card h3 { margin: 9px 0 6px; font-size: clamp(24px, 2.5vw, 40px); letter-spacing: -.035em; }
-.focus-card p { max-width: 430px; margin: 0; font-size: 13px; line-height: 1.5; }
-.review-button {
+.focus-card p { max-width: 300px; margin: 0; font-size: 13px; line-height: 1.5; }
+.review-queue {
+  align-self: center;
+  overflow: hidden;
+  border: 1px solid rgba(13, 14, 12, .15);
+  border-radius: var(--shape-lg);
+  background: rgba(241, 240, 234, .32);
+}
+.review-queue > header {
+  min-height: 39px;
+  padding: 0 13px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(13, 14, 12, .12);
+}
+.review-queue > header span { font: 500 10px "DM Mono"; letter-spacing: .04em; }
+.review-queue > header strong { font-size: 11px; }
+.review-queue ol { padding: 0; margin: 0; list-style: none; }
+.review-queue li {
   position: relative;
-  z-index: 3;
-  align-self: end;
-  min-width: 158px;
+  min-height: 52px;
+  padding: 8px 12px;
+  display: grid;
+  grid-template-columns: 25px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 9px;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(13, 14, 12, .11);
+  transition: background .3s var(--ease), color .3s;
+}
+.review-queue li:last-child { border-bottom: 0; }
+.review-queue li > span { font: 500 10px "DM Mono"; opacity: .58; }
+.review-queue li div { min-width: 0; }
+.review-queue li div strong { display: block; font-size: 12px; }
+.review-queue li div small {
+  display: block;
+  margin-top: 3px;
+  overflow: hidden;
+  color: rgba(13, 14, 12, .62);
+  font-size: 10px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.review-queue li > b {
+  min-width: 64px;
+  padding: 5px 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border: 1px solid rgba(13, 14, 12, .16);
+  border-radius: var(--shape-full);
+  background: rgba(241, 240, 234, .52);
+  font-size: 11px;
+  white-space: nowrap;
+}
+.review-queue li > b i {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--shape-full);
+  background: rgba(13, 14, 12, .35);
+}
+.review-queue li.is-current {
+  background: rgba(241, 240, 234, .72);
+  box-shadow: inset 3px 0 0 var(--red);
+}
+.review-queue li.is-current > b i { background: var(--red); animation: decision-pulse .55s var(--ease) 1; }
+.review-queue li.is-confirmed { background: rgba(241, 240, 234, .45); }
+.review-queue li.is-confirmed > b { border-color: rgba(13, 14, 12, .22); background: var(--ink); color: var(--paper); }
+.review-queue li.is-confirmed > b i { background: var(--acid); }
+.review-processing .review-queue li.is-confirmed::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(100deg, transparent 32%, rgba(255, 255, 255, .72) 50%, transparent 68%);
+  transform: translateX(110%);
+  animation: decision-scan .44s var(--ease) 1;
+}
+@keyframes decision-pulse { 50% { transform: scale(1.7); } }
+@keyframes decision-scan { from { transform: translateX(-110%); } to { transform: translateX(110%); } }
+.review-outcome {
+  min-width: 0;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  justify-items: stretch;
+  align-items: center;
+  gap: 12px;
+}
+.review-button {
+  width: 100%;
+  min-width: 0;
   height: 50px;
   padding: 0 16px;
   display: flex;
@@ -589,7 +700,7 @@ button:focus-visible, a:focus-visible {
   justify-content: space-between;
   gap: 12px;
   border: 1px solid var(--ink);
-  border-radius: var(--shape-control);
+  border-radius: var(--shape-md);
   background: var(--ink);
   color: var(--paper);
   font-size: 12px;
@@ -605,25 +716,23 @@ button:focus-visible, a:focus-visible {
   height: 15px;
   border: 2px solid #72756c;
   border-top-color: var(--acid);
-  border-radius: var(--shape-round);
+  border-radius: var(--shape-full);
   animation: button-spin .7s linear infinite;
 }
 .review-button.is-done { background: var(--paper); color: var(--ink); }
 @keyframes button-spin { to { transform: rotate(360deg); } }
 .focus-progress {
-  position: absolute;
-  right: 18%;
-  top: 50%;
-  width: clamp(150px, 25%, 230px);
+  position: relative;
+  width: clamp(128px, 11vw, 164px);
   aspect-ratio: 1;
+  justify-self: center;
   border: 1px solid rgba(13, 14, 12, .22);
-  border-radius: var(--shape-round);
-  transform: translateY(-50%);
+  border-radius: var(--shape-full);
 }
 .focus-progress > i {
   position: absolute;
   inset: 8%;
-  border-radius: var(--shape-round);
+  border-radius: var(--shape-full);
   background: conic-gradient(from -90deg, var(--ink) var(--review-progress), rgba(13, 14, 12, .14) 0);
   mask: radial-gradient(transparent 61%, #000 62%);
   transition: background .12s linear;
@@ -650,9 +759,9 @@ button:focus-visible, a:focus-visible {
 }
 .review-done .focus-card { background: #ddff8d; }
 .review-done .focus-progress { animation: review-pop .5s var(--ease) 1; }
-@keyframes review-pop { 50% { transform: translateY(-50%) scale(1.045); } }
+@keyframes review-pop { 50% { transform: scale(1.045); box-shadow: 0 0 0 8px rgba(241, 240, 234, .28); } }
 .after-grid { margin-top: 12px; display: grid; grid-template-columns: 1.3fr .8fr .9fr; gap: 12px; }
-.after-grid > div { min-height: 104px; padding: 14px; border: 1px solid #34362f; border-radius: var(--shape-structure); background: #1b1c19; }
+.after-grid > div { min-height: 104px; padding: 14px; border: 1px solid var(--line-dark); border-radius: var(--shape-lg); background: #1b1c19; }
 .after-grid small { color: #a2a59b; font-size: 11px; }
 .momentum strong { display: block; margin-top: 7px; font-size: 22px; }
 .momentum svg { width: 100%; height: 34px; }
@@ -670,7 +779,7 @@ button:focus-visible, a:focus-visible {
 }
 .quick button b { color: var(--acid); }
 .activity p { margin: 10px 0; font-size: 11px; }
-.activity p i { display: inline-block; width: 6px; height: 6px; margin-right: 7px; border-radius: var(--shape-round); background: var(--acid); }
+.activity p i { display: inline-block; width: 6px; height: 6px; margin-right: 7px; border-radius: var(--shape-full); background: var(--acid); }
 .success-toast {
   position: absolute;
   z-index: 7;
@@ -682,7 +791,7 @@ button:focus-visible, a:focus-visible {
   align-items: center;
   gap: 11px;
   background: var(--paper);
-  border-radius: var(--shape-control);
+  border-radius: var(--shape-md);
   color: var(--ink);
   font-size: 12px;
   transform: translateY(80px);
@@ -694,7 +803,7 @@ button:focus-visible, a:focus-visible {
   height: 24px;
   display: grid;
   place-content: center;
-  border-radius: var(--shape-round);
+  border-radius: var(--shape-full);
   background: var(--acid);
 }
 .review-done .success-toast { transform: none; opacity: 1; }
@@ -741,7 +850,7 @@ button:focus-visible, a:focus-visible {
   justify-content: center;
   gap: 8px;
   border: 1px solid var(--ink);
-  border-radius: var(--shape-round);
+  border-radius: var(--shape-full);
   background: var(--paper);
   color: var(--ink);
   box-shadow: 0 14px 34px rgba(13, 14, 12, .25);
@@ -758,7 +867,7 @@ button:focus-visible, a:focus-visible {
   padding: 7px 9px;
   text-align: center;
   background: var(--ink);
-  border-radius: var(--shape-control);
+  border-radius: var(--shape-xs);
   color: var(--paper);
   font: 11px "DM Mono";
   transform: translateX(-50%);
@@ -783,11 +892,12 @@ button:focus-visible, a:focus-visible {
 }
 .signal-row {
   width: min(100%, 1400px);
-  margin: 0 auto;
+  margin: 14px auto 0;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  border: 1px solid var(--ink);
-  border-top: 0;
+  overflow: hidden;
+  border: 1px solid rgba(13, 14, 12, .2);
+  border-radius: var(--shape-xl);
 }
 .signal-row article {
   min-height: 118px;
@@ -811,8 +921,10 @@ button:focus-visible, a:focus-visible {
   margin-top: 70px;
   display: grid;
   grid-template-columns: 34% 66%;
-  border: 1px solid #41433c;
-  border-radius: var(--shape-structure);
+  overflow: hidden;
+  border: 1px solid var(--line-dark);
+  border-radius: var(--shape-2xl);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, .18);
 }
 .capability-tabs { display: grid; grid-template-rows: repeat(4, 1fr); }
 .capability-tabs button {
@@ -825,9 +937,8 @@ button:focus-visible, a:focus-visible {
   align-items: start;
   text-align: left;
   border: 0;
-  border-bottom: 1px solid #41433c;
+  border-bottom: 1px solid var(--line-dark);
   background: transparent;
-  border-radius: var(--shape-structure);
   color: var(--paper);
   transition: background .28s, color .28s;
 }
@@ -854,8 +965,9 @@ button:focus-visible, a:focus-visible {
   margin-top: 22px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  border: 1px solid #42443d;
-  border-radius: var(--shape-structure);
+  overflow: hidden;
+  border: 1px solid var(--line-dark);
+  border-radius: var(--shape-lg);
   animation: capability-copy-in .4s var(--ease) 1;
 }
 @keyframes capability-copy-in {
@@ -875,8 +987,8 @@ button:focus-visible, a:focus-visible {
   min-height: 410px;
   margin-top: 18px;
   overflow: hidden;
-  border: 1px solid #42443d;
-  border-radius: var(--shape-structure);
+  border: 1px solid var(--line-dark);
+  border-radius: var(--shape-xl);
   background: var(--paper);
   color: var(--ink);
 }
@@ -898,7 +1010,7 @@ button:focus-visible, a:focus-visible {
   align-items: center;
   gap: 18px;
 }
-.hierarchy-before { padding: 18px; border: 1px solid var(--line); border-radius: var(--shape-structure); }
+.hierarchy-before { padding: 18px; border: 1px solid var(--line); border-radius: var(--shape-md); }
 .hierarchy-before small, .workflow-path small { font-size: 11px; color: #666961; }
 .hierarchy-before i { display: block; height: 32px; margin-top: 13px; background: #d8d7d1; }
 .hierarchy-before i:nth-of-type(2) { width: 100%; }
@@ -912,7 +1024,7 @@ button:focus-visible, a:focus-visible {
   grid-template-columns: 1.5fr .7fr;
   gap: 13px;
   border: 1px solid var(--ink);
-  border-radius: var(--shape-structure);
+  border-radius: var(--shape-lg);
   background: #fff;
 }
 .gaze-order {
@@ -927,16 +1039,16 @@ button:focus-visible, a:focus-visible {
   font: 11px "DM Mono";
 }
 .gaze-order i { flex: 1; height: 1px; background: currentColor; }
-.hierarchy-after article { padding: 35px 20px 20px; border-radius: var(--shape-structure); background: var(--acid); }
+.hierarchy-after article { padding: 35px 20px 20px; border-radius: var(--shape-md); background: var(--acid); }
 .hierarchy-after article small, .hierarchy-after aside small { font-size: 11px; }
 .hierarchy-after article strong { display: block; margin-top: 18px; font-size: clamp(23px, 2vw, 34px); letter-spacing: -.025em; }
-.hierarchy-after article button { margin-top: 30px; padding: 11px 14px; border: 0; border-radius: var(--shape-control); background: var(--ink); color: var(--paper); font-size: 12px; }
+.hierarchy-after article button { margin-top: 30px; padding: 11px 14px; border: 0; border-radius: var(--shape-sm); background: var(--ink); color: var(--paper); font-size: 12px; }
 .hierarchy-after aside { padding: 35px 15px 15px; border: 1px solid var(--line); }
 .hierarchy-after aside strong { display: block; margin-top: 8px; font-size: 30px; }
 .hierarchy-after aside p { margin: 34px 0 0; font-size: 12px; line-height: 1.5; color: #6b6e66; }
 
 .workflow-scene { display: grid; grid-template-columns: 1fr 90px 1fr; gap: 18px; align-items: center; }
-.workflow-path { min-height: 292px; padding: 22px; border: 1px solid var(--line); border-radius: var(--shape-structure); }
+.workflow-path { min-height: 292px; padding: 22px; border: 1px solid var(--line); border-radius: var(--shape-lg); }
 .workflow-path > div {
   min-height: 52px;
   margin-top: 12px;
@@ -945,7 +1057,7 @@ button:focus-visible, a:focus-visible {
   align-items: center;
   gap: 11px;
   background: #dcdbd5;
-  border-radius: var(--shape-structure);
+  border-radius: var(--shape-sm);
   font-size: 12px;
 }
 .workflow-path > div span { font: 11px "DM Mono"; color: #75776f; }
@@ -975,7 +1087,7 @@ button:focus-visible, a:focus-visible {
   gap: 10px;
   text-align: left;
   border: 0;
-  border-radius: var(--shape-control);
+  border-radius: var(--shape-md);
   background: var(--acid);
   color: var(--ink);
 }
@@ -1002,7 +1114,7 @@ button:focus-visible, a:focus-visible {
   display: grid;
   place-content: center;
   border: 1px solid;
-  border-radius: var(--shape-round);
+  border-radius: var(--shape-full);
   font: 11px "DM Mono";
   transition: background .3s;
 }
@@ -1023,7 +1135,7 @@ button:focus-visible, a:focus-visible {
   grid-template-columns: 1fr 1.1fr;
   gap: 25px;
   border: 1px solid var(--ink);
-  border-radius: var(--shape-structure);
+  border-radius: var(--shape-lg);
   background: #fff;
 }
 .feedback-product > button {
@@ -1033,7 +1145,7 @@ button:focus-visible, a:focus-visible {
   align-items: center;
   justify-content: space-between;
   border: 1px solid var(--ink);
-  border-radius: var(--shape-control);
+  border-radius: var(--shape-md);
   background: var(--ink);
   color: var(--paper);
   font-size: 14px;
@@ -1044,7 +1156,7 @@ button:focus-visible, a:focus-visible {
   height: 17px;
   border: 2px solid #777970;
   border-top-color: var(--acid);
-  border-radius: var(--shape-round);
+  border-radius: var(--shape-full);
   animation: button-spin .7s linear infinite;
 }
 .feedback-product > button.phase-2, .feedback-product > button.phase-3 { background: var(--acid); color: var(--ink); }
@@ -1090,7 +1202,7 @@ button:focus-visible, a:focus-visible {
   width: 18px;
   height: 18px;
   border: 4px solid var(--paper);
-  border-radius: var(--shape-round);
+  border-radius: var(--shape-full);
   background: var(--red);
   box-shadow: 0 0 0 1px var(--ink);
   transform: translate(-50%, -50%);
@@ -1104,7 +1216,7 @@ button:focus-visible, a:focus-visible {
   min-height: 115px;
   padding: 20px;
   border: 1px solid var(--ink);
-  border-radius: var(--shape-structure);
+  border-radius: var(--shape-lg);
   background: #fff;
   transition: transform .5s var(--ease), opacity .35s, background .35s;
 }
@@ -1129,8 +1241,11 @@ button:focus-visible, a:focus-visible {
   display: grid;
   grid-template-columns: 34% 66%;
   min-height: 600px;
-  border: 1px solid var(--ink);
-  border-radius: var(--shape-structure);
+  overflow: hidden;
+  border: 1px solid rgba(13, 14, 12, .22);
+  border-radius: var(--shape-2xl);
+  background: var(--surface-raised);
+  box-shadow: var(--shadow-panel);
 }
 .scope-switch {
   position: relative;
@@ -1142,11 +1257,14 @@ button:focus-visible, a:focus-visible {
   position: absolute;
   z-index: 0;
   inset: 0 0 50%;
-  border-radius: var(--shape-structure);
+  border-radius: var(--shape-2xl) var(--shape-none) var(--shape-none) var(--shape-none);
   background: var(--ink);
-  transition: transform .45s var(--ease), background .3s;
+  transition: transform .45s var(--ease), background .3s, border-radius .36s var(--ease);
 }
-.track-experimental .scope-active-bg { transform: translateY(100%); }
+.track-experimental .scope-active-bg {
+  border-radius: var(--shape-none) var(--shape-none) var(--shape-none) var(--shape-2xl);
+  transform: translateY(100%);
+}
 .scope-switch button {
   position: relative;
   z-index: 1;
@@ -1161,7 +1279,6 @@ button:focus-visible, a:focus-visible {
   border: 0;
   border-bottom: 1px solid var(--ink);
   background: transparent;
-  border-radius: var(--shape-structure);
   transition: color .3s;
 }
 .scope-switch button:last-child { border-bottom: 0; }
@@ -1187,7 +1304,7 @@ button:focus-visible, a:focus-visible {
   align-items: center;
   gap: 20px;
   border: 1px solid var(--line);
-  border-radius: var(--shape-structure);
+  border-radius: var(--shape-lg);
   opacity: 0;
   transform: translateY(16px);
   transition: opacity .35s, transform .45s var(--ease);
@@ -1195,7 +1312,7 @@ button:focus-visible, a:focus-visible {
 .scope-diagram.is-active { opacity: 1; transform: none; }
 .scope-diagram > span, .scope-diagram > b { font: 11px "DM Mono"; }
 .scope-diagram > div { display: flex; gap: 9px; align-items: center; }
-.scope-diagram > div i { flex: 1; height: 52px; border: 1px solid var(--line); border-radius: var(--shape-structure); background: #e0dfd9; transition: transform .4s, background .4s; }
+.scope-diagram > div i { flex: 1; height: 52px; border: 1px solid var(--line); border-radius: var(--shape-sm); background: #e0dfd9; transition: transform .4s, background .4s; }
 .standard-diagram > div i.focus { transform: translateY(-8px); background: var(--acid); box-shadow: 4px 4px 0 var(--ink); }
 .experimental-diagram { background: var(--ink); color: var(--paper); }
 .experimental-diagram > div i { border-color: #4f514a; background: #272824; transform: rotate(-4deg) translateY(6px); }
@@ -1206,7 +1323,7 @@ button:focus-visible, a:focus-visible {
 .scope-copy > p { margin: 25px 0 0; color: #686a63; font-size: 14px; }
 .scope-copy h3 { margin: 8px 0 25px; font-size: clamp(38px, 4vw, 60px); letter-spacing: -.035em; }
 .scope-copy h3 span { font-size: .42em; font-weight: 500; letter-spacing: 0; }
-.scope-facts { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--line); border-radius: var(--shape-structure); }
+.scope-facts { display: grid; grid-template-columns: repeat(3, 1fr); overflow: hidden; border: 1px solid var(--line); border-radius: var(--shape-lg); }
 .scope-facts article { min-height: 116px; padding: 16px; border-right: 1px solid var(--line); }
 .scope-facts article:last-child { border-right: 0; }
 .scope-facts small { font-size: 11px; color: #6b6d65; }
@@ -1219,7 +1336,7 @@ button:focus-visible, a:focus-visible {
   height: 23px;
   margin-right: 7px;
   place-content: center;
-  border-radius: var(--shape-round);
+  border-radius: var(--shape-full);
   background: var(--acid);
 }
 .scope-current {
@@ -1242,8 +1359,10 @@ button:focus-visible, a:focus-visible {
 .process-system {
   --process-step: 0;
   margin-top: 74px;
-  border: 1px solid #41433c;
-  border-radius: var(--shape-structure);
+  overflow: hidden;
+  border: 1px solid var(--line-dark);
+  border-radius: var(--shape-2xl);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, .18);
 }
 .process-track {
   position: relative;
@@ -1275,7 +1394,7 @@ button:focus-visible, a:focus-visible {
   height: 42px;
   display: grid;
   place-content: center;
-  border-radius: var(--shape-round);
+  border-radius: var(--shape-full);
   background: var(--acid);
   color: var(--ink);
   box-shadow: 0 0 0 7px rgba(199, 255, 66, .12);
@@ -1334,7 +1453,7 @@ button:focus-visible, a:focus-visible {
   height: 126px;
   overflow: hidden;
   border: 1px solid #41433c;
-  border-radius: var(--shape-structure);
+  border-radius: var(--shape-lg);
   background: #11120f;
 }
 .scan-mini > span { position: absolute; left: 16px; right: 16px; height: 15px; background: #30322d; }
@@ -1458,8 +1577,9 @@ button:focus-visible, a:focus-visible {
   margin-top: 70px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  border: 1px solid var(--ink);
-  border-radius: var(--shape-structure);
+  overflow: hidden;
+  border: 1px solid rgba(13, 14, 12, .2);
+  border-radius: var(--shape-xl);
 }
 .start-steps article { min-height: 150px; padding: 22px; border-right: 1px solid var(--ink); }
 .start-steps article:last-child { border-right: 0; }
@@ -1471,10 +1591,12 @@ button:focus-visible, a:focus-visible {
   margin-top: 24px;
   display: grid;
   grid-template-columns: 1.15fr .85fr;
-  border: 1px solid var(--ink);
-  border-radius: var(--shape-structure);
+  overflow: hidden;
+  border: 1px solid rgba(13, 14, 12, .22);
+  border-radius: var(--shape-2xl);
   background: var(--ink);
   color: var(--paper);
+  box-shadow: var(--shadow-panel);
 }
 .command-head {
   grid-column: 1;
@@ -1489,7 +1611,7 @@ button:focus-visible, a:focus-visible {
   display: flex;
   gap: 14px;
   border: 1px solid #51534c;
-  border-radius: var(--shape-control);
+  border-radius: var(--shape-sm);
   background: transparent;
   color: var(--paper);
   font-size: 12px;
@@ -1547,6 +1669,19 @@ button:focus-visible, a:focus-visible {
   .rebuild { left: calc(80% - var(--hero-p) * 30%); width: min(650px, 51vw); }
   .hero-tracks { max-width: 640px; }
   .compare-frame { aspect-ratio: auto; height: 700px; }
+  .focus-card {
+    min-height: 342px;
+    grid-template-columns: minmax(0, 1fr) 220px;
+    grid-template-areas:
+      "copy outcome"
+      "queue queue";
+  }
+  .focus-copy { grid-area: copy; }
+  .review-queue { grid-area: queue; width: 100%; }
+  .review-queue ol { display: grid; grid-template-columns: repeat(3, 1fr); }
+  .review-queue li { border-right: 1px solid rgba(13, 14, 12, .11); border-bottom: 0; }
+  .review-queue li:last-child { border-right: 0; }
+  .review-outcome { grid-area: outcome; }
   .capability-layout { grid-template-columns: 1fr; }
   .capability-tabs { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
   .capability-tabs button:nth-child(2) { border-right: 0; }
@@ -1555,7 +1690,13 @@ button:focus-visible, a:focus-visible {
   .scope-console { grid-template-columns: 1fr; }
   .scope-switch { min-height: 260px; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr; border-right: 0; border-bottom: 1px solid var(--ink); }
   .scope-active-bg { inset: 0 50% 0 0; }
-  .track-experimental .scope-active-bg { transform: translateX(100%); }
+  .scope-active-bg {
+    border-radius: var(--shape-2xl) var(--shape-none) var(--shape-none) var(--shape-none);
+  }
+  .track-experimental .scope-active-bg {
+    border-radius: var(--shape-none) var(--shape-2xl) var(--shape-none) var(--shape-none);
+    transform: translateX(100%);
+  }
   .scope-switch button { border-right: 1px solid var(--ink); border-bottom: 0; }
   .scope-panel { min-height: 570px; }
 }
@@ -1578,7 +1719,24 @@ button:focus-visible, a:focus-visible {
   .section-heading h2, .section-heading > p:last-child { grid-column: 1; }
   .section-heading h2 { max-width: 850px; margin-top: 18px; }
   .section-heading > p:last-child { margin: 24px 0 0 14%; }
-  .compare-frame { height: 680px; }
+  .compare-frame { height: 1000px; }
+  .focus-card {
+    min-height: 535px;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "copy"
+      "queue"
+      "outcome";
+  }
+  .review-outcome {
+    grid-template-columns: 150px minmax(0, 1fr);
+    grid-template-rows: 1fr;
+    gap: 18px;
+  }
+  .review-queue ol { display: block; }
+  .review-queue li { border-right: 0; border-bottom: 1px solid rgba(13, 14, 12, .11); }
+  .review-queue li:last-child { border-bottom: 0; }
+  .focus-progress { width: 142px; }
   .signal-row { grid-template-columns: 1fr 1fr; }
   .signal-row article:nth-child(2) { border-right: 0; }
   .capability-explanation { grid-template-columns: 1fr; }
@@ -1634,7 +1792,7 @@ button:focus-visible, a:focus-visible {
   .hero-progress span { max-width: 150px; }
   .section-heading h2 { font-size: clamp(39px, 10.8vw, 50px); line-height: 1.09; letter-spacing: -.025em; }
   .section-heading > p:last-child { margin-left: 0; font-size: 14px; }
-  .compare-frame { margin-top: 48px; height: 620px; }
+  .compare-frame { margin-top: 48px; height: 1000px; border-radius: var(--shape-xl); }
   .compare-top { padding: 0 12px; font-size: 11px; }
   .before-layer, .after-layer { padding: 11px; }
   .workspace { grid-template-columns: 54px minmax(0, 1fr); }
@@ -1650,11 +1808,15 @@ button:focus-visible, a:focus-visible {
   .old-table > div > *:nth-child(2) { display: none; }
   .after-workspace header strong { font-size: 18px; }
   .team { display: none; }
-  .focus-card { min-height: 235px; grid-template-columns: 1fr; }
+  .focus-card { min-height: 580px; padding: 16px; gap: 14px; }
   .focus-card h3 { font-size: 23px; }
-  .focus-card p { max-width: 68%; font-size: 11px; }
-  .review-button { align-self: end; width: 62%; min-width: 130px; height: 43px; }
-  .focus-progress { right: -8%; top: 50%; width: 58%; }
+  .focus-card p { max-width: none; font-size: 12px; }
+  .review-queue ol { display: block; }
+  .review-queue li { border-right: 0; border-bottom: 1px solid rgba(13, 14, 12, .11); }
+  .review-queue li:last-child { border-bottom: 0; }
+  .review-outcome { grid-template-columns: 1fr; grid-template-rows: auto auto; gap: 12px; }
+  .review-button { width: 100%; min-width: 0; height: 46px; }
+  .focus-progress { width: 118px; }
   .after-grid { grid-template-columns: 1fr 1fr; }
   .after-grid .activity { display: none; }
   .success-toast { right: 12px; left: 12px; bottom: 12px; font-size: 11px; }
@@ -1686,7 +1848,13 @@ button:focus-visible, a:focus-visible {
   .scope-console { margin-top: 50px; }
   .scope-switch { min-height: 300px; grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; }
   .scope-active-bg { inset: 0 0 50%; }
-  .track-experimental .scope-active-bg { transform: translateY(100%); }
+  .scope-active-bg {
+    border-radius: var(--shape-2xl) var(--shape-2xl) var(--shape-none) var(--shape-none);
+  }
+  .track-experimental .scope-active-bg {
+    border-radius: var(--shape-none);
+    transform: translateY(100%);
+  }
   .scope-switch button { border-right: 0; border-bottom: 1px solid var(--ink); padding: 20px; }
   .scope-switch p { margin-top: 14px; font-size: 12px; }
   .scope-panel { min-height: 700px; padding: 22px 20px 70px; }

@@ -56,6 +56,19 @@ const copy = {
         processing: '正在保存',
         done: '评审已完成',
         toast: '设计评审完成，下一里程碑已解锁',
+        queue: {
+          label: '评审决策队列',
+          count: '3 项',
+          ready: '已就绪',
+          pending: '待确认',
+          confirming: '确认中',
+          confirmed: '已确认',
+          items: [
+            ['信息层级', '主任务已进入首要视线'],
+            ['操作路径', '高频操作已缩短至一步'],
+            ['动效反馈', '完成状态与下一步已连接'],
+          ],
+        },
       },
     },
     capabilities: {
@@ -212,6 +225,19 @@ const copy = {
         processing: 'Saving',
         done: 'Review complete',
         toast: 'Design review complete. The next milestone is unlocked.',
+        queue: {
+          label: 'REVIEW QUEUE',
+          count: '3 ITEMS',
+          ready: 'Ready',
+          pending: 'To confirm',
+          confirming: 'Confirming',
+          confirmed: 'Confirmed',
+          items: [
+            ['Information hierarchy', 'Primary task leads the visual order'],
+            ['Action workflow', 'Frequent action reduced to one step'],
+            ['Motion feedback', 'Completion now connects to what comes next'],
+          ],
+        },
       },
     },
     capabilities: {
@@ -491,37 +517,72 @@ function AfterWorkspace({
 }) {
   const zh = locale === 'zh'
   const c = copy[locale].compare.review
+  const reviewStep = reviewState === 'done'
+    ? 3
+    : reviewState === 'processing'
+      ? reviewProgress >= 96 ? 3 : reviewProgress >= 88 ? 2 : reviewProgress >= 80 ? 1 : 0
+      : 0
   const statusText = reviewState === 'idle' ? c.action : reviewState === 'processing' ? c.processing : c.done
+  const decisionState = (index: number) => {
+    if (reviewState === 'done' || index < reviewStep) return 'confirmed'
+    if (reviewState === 'processing' && index === reviewStep) return 'current'
+    return index < 2 ? 'ready' : 'pending'
+  }
+  const decisionStatus = (index: number) => {
+    const state = decisionState(index)
+    if (state === 'confirmed') return c.queue.confirmed
+    if (state === 'current') return c.queue.confirming
+    return state === 'ready' ? c.queue.ready : c.queue.pending
+  }
   return <div className={`workspace after-workspace review-${reviewState}`} style={{ '--review-progress': `${reviewProgress}%` } as CSSProperties}>
     <aside><Mark /><span className="nav-active">⌂</span><span>◇</span><span>↗</span><b>NS</b></aside>
     <main>
       <header><div><small>{zh ? '星期一 / 当前工作区' : 'MONDAY / ACTIVE WORKSPACE'}</small><strong>{zh ? '推进北极星计划' : 'Move Northstar forward'}</strong></div><div className="team"><i>JR</i><i>MS</i><i>+3</i></div></header>
-      <section className="focus-card">
-        <div><small>{zh ? '下一项关键任务' : 'NEXT IMPORTANT TASK'}</small><h3>{reviewState === 'done' ? c.done : (zh ? '设计评审' : 'Design review')}</h3><p>{reviewState === 'done' ? (zh ? '已解锁下一里程碑，可以继续推进。' : 'The next milestone is unlocked and ready.') : (zh ? '3 项决策已就绪，预计 8 分钟。' : 'Three decisions are ready. Estimated time: 8 min.')}</p></div>
-        <button
-          type="button"
-          className={`review-button is-${reviewState}`}
-          tabIndex={interactive ? 0 : -1}
-          disabled={reviewState !== 'idle'}
-          onClick={onReview}
-        >
-          {reviewState === 'processing' && <i />}
-          <span>{statusText}</span>
-          <b>{reviewState === 'done' ? '✓' : '→'}</b>
-        </button>
-        <div
-          className="focus-progress"
-          role="progressbar"
-          aria-label={zh ? '评审完成进度' : 'Review completion progress'}
-          aria-valuemin={74}
-          aria-valuemax={100}
-          aria-valuenow={reviewProgress}
-        >
-          <i />
-          <div>
-            <strong>{reviewProgress}<small>%</small></strong>
-            <span>{zh ? '完成度' : 'COMPLETION'}</span>
+      <section className="focus-card" data-review-step={reviewStep}>
+        <div className="focus-copy">
+          <small>{zh ? '下一项关键任务' : 'NEXT IMPORTANT TASK'}</small>
+          <h3>{reviewState === 'done' ? c.done : (zh ? '设计评审' : 'Design review')}</h3>
+          <p>{reviewState === 'done' ? (zh ? '三项决策已经确认，下一里程碑可以继续推进。' : 'All three decisions are confirmed. The next milestone is ready.') : (zh ? '确认三个关键体验决策，预计 8 分钟。' : 'Confirm three key experience decisions. Estimated time: 8 min.')}</p>
+        </div>
+        <div className="review-queue" aria-live="polite">
+          <header><span>{c.queue.label}</span><strong>{c.queue.count}</strong></header>
+          <ol>
+            {c.queue.items.map((item, index) => {
+              const state = decisionState(index)
+              return <li className={`is-${state}`} key={item[0]}>
+                <span>0{index + 1}</span>
+                <div><strong>{item[0]}</strong><small>{item[1]}</small></div>
+                <b><i />{decisionStatus(index)}</b>
+              </li>
+            })}
+          </ol>
+        </div>
+        <div className="review-outcome">
+          <div
+            className="focus-progress"
+            role="progressbar"
+            aria-label={zh ? '评审完成进度' : 'Review completion progress'}
+            aria-valuemin={74}
+            aria-valuemax={100}
+            aria-valuenow={reviewProgress}
+          >
+            <i />
+            <div>
+              <strong>{reviewProgress}<small>%</small></strong>
+              <span>{zh ? '完成度' : 'COMPLETION'}</span>
+            </div>
           </div>
+          <button
+            type="button"
+            className={`review-button is-${reviewState}`}
+            tabIndex={interactive ? 0 : -1}
+            disabled={reviewState !== 'idle'}
+            onClick={onReview}
+          >
+            {reviewState === 'processing' && <i />}
+            <span>{statusText}</span>
+            <b>{reviewState === 'done' ? '✓' : '→'}</b>
+          </button>
         </div>
       </section>
       <section className="after-grid">
@@ -615,7 +676,7 @@ function Compare({ locale }: { locale: Locale }) {
     setReviewState('processing')
     setReviewProgress(74)
     const startedAt = performance.now()
-    const duration = 3000
+    const duration = 3600
     const advance = (now: number) => {
       const elapsed = Math.min(1, (now - startedAt) / duration)
       const eased = elapsed * elapsed * (3 - 2 * elapsed)
