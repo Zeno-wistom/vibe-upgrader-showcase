@@ -600,6 +600,7 @@ function Compare({ locale }: { locale: Locale }) {
   const frameRef = useRef<HTMLDivElement>(null)
   const controlRef = useRef<HTMLDivElement>(null)
   const draggingRef = useRef(false)
+  const interactedRef = useRef(false)
   const reviewFrame = useRef<number | null>(null)
   const [position, setPosition] = useState(12)
   const [dragging, setDragging] = useState(false)
@@ -612,7 +613,7 @@ function Compare({ locale }: { locale: Locale }) {
     const element = controlRef.current
     if (!element) return
     const observer = new IntersectionObserver(entries => {
-      if (!entries[0]?.isIntersecting) return
+      if (!entries[0]?.isIntersecting || interactedRef.current) return
       setHinting(true)
       observer.disconnect()
     }, { threshold: .55 })
@@ -631,11 +632,16 @@ function Compare({ locale }: { locale: Locale }) {
     setPosition(next)
   }
 
+  const stopHint = () => {
+    interactedRef.current = true
+    setHinting(false)
+  }
+
   const pointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
     event.preventDefault()
     draggingRef.current = true
     setDragging(true)
-    setHinting(false)
+    stopHint()
     event.currentTarget.setPointerCapture(event.pointerId)
   }
 
@@ -661,7 +667,7 @@ function Compare({ locale }: { locale: Locale }) {
     else if (event.key === 'End') next = 95
     else return
     event.preventDefault()
-    setHinting(false)
+    stopHint()
     setPosition(next)
   }
 
@@ -721,6 +727,7 @@ function Compare({ locale }: { locale: Locale }) {
         onPointerUp={pointerUp}
         onPointerCancel={pointerUp}
         onPointerLeave={() => { if (!dragging) setHandleY(0) }}
+        onFocus={stopHint}
         onKeyDown={keyboard}
       >
         <i className="compare-divider" />

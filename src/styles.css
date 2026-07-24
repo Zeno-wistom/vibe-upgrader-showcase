@@ -884,11 +884,11 @@ button:focus-visible, a:focus-visible {
   box-shadow: 0 0 0 10px rgba(199, 255, 66, .22);
   transition: background .12s, transform .12s;
 }
-.compare-control.is-hinting .compare-handle { animation: handle-hint 1.2s var(--ease) 1; }
+.compare-control.is-hinting .compare-handle { animation: handle-hint 2.4s var(--ease) infinite; }
 @keyframes handle-hint {
-  0%, 100% { transform: translate(-50%, -50%); }
-  30% { transform: translate(calc(-50% - 8px), -50%) scale(1.03); box-shadow: 0 0 0 8px rgba(199, 255, 66, .2); }
-  65% { transform: translate(calc(-50% + 8px), -50%) scale(1.03); box-shadow: 0 0 0 8px rgba(199, 255, 66, .1); }
+  0%, 16%, 68%, 100% { transform: translate(-50%, -50%); }
+  28% { transform: translate(calc(-50% - 8px), -50%) scale(1.03); box-shadow: 0 0 0 8px rgba(199, 255, 66, .2); }
+  46% { transform: translate(calc(-50% + 8px), -50%) scale(1.03); box-shadow: 0 0 0 8px rgba(199, 255, 66, .1); }
 }
 .signal-row {
   width: min(100%, 1400px);
