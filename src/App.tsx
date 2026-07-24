@@ -479,19 +479,20 @@ function BeforeWorkspace({ locale }: { locale: Locale }) {
 function AfterWorkspace({
   locale,
   reviewState,
+  reviewProgress,
   interactive,
   onReview,
 }: {
   locale: Locale
   reviewState: ReviewState
+  reviewProgress: number
   interactive: boolean
   onReview: () => void
 }) {
   const zh = locale === 'zh'
   const c = copy[locale].compare.review
-  const progress = reviewState === 'idle' ? 74 : reviewState === 'processing' ? 88 : 100
   const statusText = reviewState === 'idle' ? c.action : reviewState === 'processing' ? c.processing : c.done
-  return <div className={`workspace after-workspace review-${reviewState}`} style={{ '--review-progress': `${progress}%` } as CSSProperties}>
+  return <div className={`workspace after-workspace review-${reviewState}`} style={{ '--review-progress': `${reviewProgress}%` } as CSSProperties}>
     <aside><Mark /><span className="nav-active">⌂</span><span>◇</span><span>↗</span><b>NS</b></aside>
     <main>
       <header><div><small>{zh ? '星期一 / 当前工作区' : 'MONDAY / ACTIVE WORKSPACE'}</small><strong>{zh ? '推进北极星计划' : 'Move Northstar forward'}</strong></div><div className="team"><i>JR</i><i>MS</i><i>+3</i></div></header>
@@ -508,9 +509,19 @@ function AfterWorkspace({
           <span>{statusText}</span>
           <b>{reviewState === 'done' ? '✓' : '→'}</b>
         </button>
-        <div className="focus-progress">
+        <div
+          className="focus-progress"
+          role="progressbar"
+          aria-label={zh ? '评审完成进度' : 'Review completion progress'}
+          aria-valuemin={74}
+          aria-valuemax={100}
+          aria-valuenow={reviewProgress}
+        >
           <i />
-          <strong>{progress}<small>%</small></strong>
+          <div>
+            <strong>{reviewProgress}<small>%</small></strong>
+            <span>{zh ? '完成度' : 'COMPLETION'}</span>
+          </div>
         </div>
       </section>
       <section className="after-grid">
@@ -528,12 +539,13 @@ function Compare({ locale }: { locale: Locale }) {
   const frameRef = useRef<HTMLDivElement>(null)
   const controlRef = useRef<HTMLDivElement>(null)
   const draggingRef = useRef(false)
-  const reviewTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const reviewFrame = useRef<number | null>(null)
   const [position, setPosition] = useState(12)
   const [dragging, setDragging] = useState(false)
   const [hinting, setHinting] = useState(false)
   const [handleY, setHandleY] = useState(0)
   const [reviewState, setReviewState] = useState<ReviewState>('idle')
+  const [reviewProgress, setReviewProgress] = useState(74)
 
   useEffect(() => {
     const element = controlRef.current
@@ -548,7 +560,7 @@ function Compare({ locale }: { locale: Locale }) {
   }, [])
 
   useEffect(() => () => {
-    if (reviewTimer.current) clearTimeout(reviewTimer.current)
+    if (reviewFrame.current !== null) cancelAnimationFrame(reviewFrame.current)
   }, [])
 
   const setFromClientX = (clientX: number) => {
@@ -594,8 +606,29 @@ function Compare({ locale }: { locale: Locale }) {
 
   const runReview = () => {
     if (reviewState !== 'idle') return
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setReviewProgress(100)
+      setReviewState('done')
+      return
+    }
+
     setReviewState('processing')
-    reviewTimer.current = setTimeout(() => setReviewState('done'), 820)
+    setReviewProgress(74)
+    const startedAt = performance.now()
+    const duration = 3000
+    const advance = (now: number) => {
+      const elapsed = Math.min(1, (now - startedAt) / duration)
+      const eased = elapsed * elapsed * (3 - 2 * elapsed)
+      setReviewProgress(Math.round(74 + 26 * eased))
+      if (elapsed < 1) {
+        reviewFrame.current = requestAnimationFrame(advance)
+        return
+      }
+      reviewFrame.current = null
+      setReviewProgress(100)
+      setReviewState('done')
+    }
+    reviewFrame.current = requestAnimationFrame(advance)
   }
 
   const p = position / 100
@@ -611,7 +644,7 @@ function Compare({ locale }: { locale: Locale }) {
       <div className="compare-top"><span>{c.after}</span><span>{c.before}</span></div>
       <div className="compare-canvas">
         <div className="before-layer"><BeforeWorkspace locale={locale} /></div>
-        <div className="after-layer"><AfterWorkspace locale={locale} reviewState={reviewState} interactive={position > 62} onReview={runReview} /></div>
+        <div className="after-layer"><AfterWorkspace locale={locale} reviewState={reviewState} reviewProgress={reviewProgress} interactive={position > 62} onReview={runReview} /></div>
       </div>
       <div className={`compare-control${dragging ? ' is-dragging' : ''}${hinting ? ' is-hinting' : ''}`}
         ref={controlRef}
@@ -784,7 +817,7 @@ function Capabilities({ locale }: { locale: Locale }) {
 
 function Scope({ locale }: { locale: Locale }) {
   const c = copy[locale].scope
-  const [track, setTrack] = useState<Track>('experimental')
+  const [track, setTrack] = useState<Track>('standard')
   const active = c[track]
   const choose = (next: Track) => setTrack(next)
 
